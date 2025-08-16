@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<h1>登录您的CCW账号,token将会自动读取,并由你复制进软件中作为密码,服务器不会存储您的账号密码等任何信息,您随时可以禁用掉生成的token</h1>
+<button id="loginButton" onclick="initLogin();this.remove()">打开登录界面</button>
+<div id="tokenContainer"></div>
+<script>
+    const container = document.createElement('iframe');
+    container.style.width = '100%';
+    container.style.height = '100%';
+    container.style.border = 'none';
+    container.style.position = 'absolute';
+    container.style.top = '0';
+    container.style.left = '0';
+    container.style.backgroundColor = 'black'
+    async function initLogin(){
+        document.body.appendChild(container);
+        const fet = await fetch('https://www.ccw.site/login')
+        const response = await fet.text();
+        container.contentWindow.document.write(response)
+        console.log('%cLogin page loaded','color:blue');
+        console.log(container.contentWindow)
+        const domInterval = setInterval(()=>{
+            if(container.contentWindow.document.querySelector('div .login-fqrdY')){
+                clearInterval(domInterval);
+                /**
+                 * @type {HTMLDivElement}
+                 */
+                const loginDom = container.contentWindow.document.querySelector('div .login-fqrdY')
+                console.log('%cLogin page DOM ready','color:blue');
+                loginDom.style.transform = 'none'
+                loginDom.style.top = 0
+            }
+        },500)
+        container.contentWindow.XMLHttpRequest.prototype.send = function(data) {
+            let modifiedData = JSON.parse(data);
+            if(this.__sentry_xhr__.url==='https://sso.ccw.site/web/auth/login-by-password' || this.__sentry_xhr__.url === 'https://sso.ccw.site/web/auth/v3/login/by_phone'){
+                let extraData = JSON.parse(modifiedData.extra)
+                extraData.device = 'ccw-message(我不会保存您的密码,token会在生成后由您手动复制进软件中,并在请求过程中携带)'
+                extraData.browser = 'cloudflare worker'
+                modifiedData.extra = JSON.stringify(extraData);
+                this.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status === 200) {
+                        const response = JSON.parse(this.responseText);
+                        console.log('Response:', response);
+                        if(response.status === 401){
+                            console.log('%c登录失败,请检查账号密码是否正确','color:red');
+                        } else if(response.status === 200) {
+                            console.log(response.body.token)
+                            window.token = response.body.token;
+                            console.log('%c登录成功,token已生成,请复制到软件中作为密码','color:green');
+                            container.remove()
+                            const tokenContainer = document.getElementById('tokenContainer');
+                            tokenContainer.innerHTML = `<h2>您的Token是: 
+                                <span style="color: green;filter:blur(5px);">${response.body.token}</span>
+                                ,请将token复制到ntfy中作为密码(不要告诉别人,否则可能被盗号)</h2>`
+                        }
+                    }
+                };
+                console.log(this.__sentry_xhr__.url,modifiedData)
+            }
+            return XMLHttpRequest.prototype.send.call(this, JSON.stringify(modifiedData));
+        };
+    }
+</script>
+</body>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CCW Message Server</title>
+</head>
+<body>
+<h1>CCW Message Server</h1>
+<h2>欢迎使用 CCW 消息服务器！将最新的消息推送至您的手机</h2>
+<a href="./ccw-message">ccw-message订阅链接</a>
+<p>使用方法:<br>
+    1.下载ntfy客户端<a href="https://ntfy.sh" style="text-decoration: none;color: blue;">官方链接:ntfy.sh</a><br>
+    2.在ntfy客户端中添加主题:ccw-message,勾选使用其他服务器,将当前服务器订阅链接 <span id="serverName"></span> 填入<br>
+    3.在<a href="./login.html">当前服务器的授权登录页中</a>登录ccw账号,复制token<br>
+    4.进入ntfy设置,添加账户,账户名随便填,密码填入刚才复制的token,服务器url填当前服务器链接<br>
+</p>
+<p>
+    常见问题:<br>
+    1.由于ntfy和系统的限制,无法实现实时消息推送,需要手动刷新已获得最新消息<br>
+</p>
+<p style="color: red;font-size: large;">
+    安全性:ccw消息读取需要token,我保证不会在存储您的任何信息,
+    token会在消息刷新请求的过程中传输至cloudflare无服务器函数<br>
+    如果您不信任我,
+    可以使用自己的cloudflare部署此服务
+</p>
+<script>
+    // 获取当前页面的URL
+    const currentUrl = window.location.href;
+    // 提取域名和端口
+    const url = new URL(currentUrl);
+    const serverName = `${url.protocol}//${url.host}/ccw-message`;
+    // 将服务器名称显示在页面上
+    document.getElementById('serverName').textContent = serverName;
+</script>
+</html>
