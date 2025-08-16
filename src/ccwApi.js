@@ -9,7 +9,7 @@ const actionGroups = {
         priority: 3,
         type:'reply',
         icon:['left_speech_bubble'],//🗨️
-        title:'{senderName} 回复了你的评论',
+        title:'{senderName} 回复了你在{subjectOutline}中的的评论\"{message}\"',
         message:'{comment}',
     },
     'CREATION_COMMENTED': {//评论
@@ -83,8 +83,9 @@ function getNotifyFromRaw(notifyRaw=[]) {
             priority: detail.priority,
             type: detail.type,
             icon: detail.icon,
-            title: detail.title.replace('{senderName}', i.senderName).replace('{subjectOutline}', i.subjectOutline).replace('{comment}', i.comment),
-            message: detail.message.replace('{comment}', i.comment).replace('{senderName}', i.senderName).replace('{subjectOutline}', i.subjectOutline),
+            title: detail.title.replace('{senderName}', i.senderName).replace('{subjectOutline}', i.subjectOutline).replace('{comment}', i.comment).replace('{message}', i.message)
+,
+            message: detail.message.replace('{comment}', i.comment).replace('{senderName}', i.senderName).replace('{subjectOutline}', i.subjectOutline).replace('{message}',i.mesaage),
             time: i.createdAt
         }
         notifyList.push(notify)
