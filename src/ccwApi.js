@@ -83,9 +83,16 @@ function getNotifyFromRaw(notifyRaw=[]) {
             priority: detail.priority,
             type: detail.type,
             icon: detail.icon,
-            title: detail.title.replace('{senderName}', i.senderName).replace('{subjectOutline}', i.subjectOutline).replace('{comment}', i.comment).replace('{message}', i.message)
-,
-            message: detail.message.replace('{comment}', i.comment).replace('{senderName}', i.senderName).replace('{subjectOutline}', i.subjectOutline).replace('{message}',i.mesaage),
+            title: detail.title
+            .replace('{senderName}', i.senderName)
+            .replace('{subjectOutline}', i.subjectOutline)
+            .replace('{comment}', i.comment)
+            .replace('{message}', i.message),
+            message: detail.message
+            .replace('{comment}', i.comment)
+            .replace('{senderName}', i.senderName)
+            .replace('{subjectOutline}', i.subjectOutline)
+            .replace('{message}',i.mesaage),
             time: i.createdAt
         }
         notifyList.push(notify)
