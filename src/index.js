@@ -72,7 +72,7 @@ export default {
 					if(auth.split(':').length !== 2) {
 						return new Response('身份验证错误,请将user:password通过base64编码以后发送', { status: 402});
 					}
-					if(auth.split(':')[1].length !== 40) {
+					if(auth.split(':')[1].trim().length !== 40) {
 						console.warn('token格式不正确,请检查token是否正确',auth.split(':')[1])
 						return new Response('身份验证错误,token格式不正确', { status: 401});
 					}
