@@ -99,7 +99,8 @@ function getNotifyFromRaw(notifyRaw=[],since=0) {
             .replace('{senderName}', i.senderName)
             .replace('{subjectOutline}', i.subjectOutline)
             .replace('{message}',i.mesaage),
-            time: i.createdAt//毫秒为单位
+            time: i.createdAt,//毫秒为单位
+            clickUrl:i.clickUrl || '',
         }
         notifyList.push(notify)
     }
@@ -122,11 +123,12 @@ async function getNotifyFromPage(pageNum = 1,perPage = 60,group = notifyGroups.s
         return {dat:[{
             contentCategory:'RAW',
             type: 'data error',
-            message:`获取失败,错误码:${notifyDat.code},数据:${notifyDat.msg}`,
+            message:`获取失败,http错误码:${notifyDat.status}错误码:${notifyDat.code},数据:${notifyDat.msg}`,
             title:'获取失败',
             icon:['warning'],
             priority:5,
-            time:Date.now()
+            time:Date.now(),
+            clickUrl: notifyDat.status===401 ? 'https://ntfy.schale.qzz.io/login': 'https://ntfy.schale.qzz.io',
         }],status:'error'}
     }
     return {dat:notificationsRaw,status:'ok'}

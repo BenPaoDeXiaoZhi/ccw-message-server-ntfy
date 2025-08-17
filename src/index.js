@@ -26,9 +26,9 @@ function ccwNotifyToNtfy(notify){
 			i.title, // title
 			i.icon, // tags
 			i.priority, // priority
-			'', // click
-			[], // actions
-			{} // attachment
+			i.clickUrl || '', // click
+			i.actions || [], // actions
+			i.attatchment || {} // attachment
 		);
 		ntfyMessageObj.setTime(Math.floor(i.time/1000));
 		ntfyMessages.push(JSON.stringify(ntfyMessageObj));
