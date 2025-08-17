@@ -20,6 +20,20 @@ export const actionGroups = {
         title:'@{senderName} 评论了你的 《{subjectOutline}》',
         message:'{comment}',
     },
+    "CREATION_REMIXED": {//改编并发布了作品
+        priority: 4,
+        type:'creation_remixed',
+        icon:['memo'],//📝
+        title:'@{senderName} 改编并发布了新作品 《{subjectOutline}》',
+        message:'@{senderName} 改编并发布了新作品 《{subjectOutline}》',
+    },
+    "PROFILE_LEAVE_WORDS":{
+        priority: 4,
+        type:'leave_words',
+        icon:['left_speech_bubble'],//🗨️
+        title:'@{senderName} 在你的留言板下留言 \"{comment}\"',
+        message:'@{senderName} 在你的留言板下留言 \"{comment}\"',
+    },
     'CREATION_LIKED': {//点赞
         priority: 3,
         type:'creation_like',
@@ -75,11 +89,11 @@ function getNotifyFromRaw(notifyRaw=[],since=0) {
             continue
         }
         if(detail === undefined) {
-            console.warn(`未知的消息类型: ${i.contentCategory}`,i)
+            console.warn(`未知的消息类型: ${i.contentCategory}`,JSON.stringify(i))
             notifyList.push({
-                priority: 1,
+                priority: 3,
                 type: 'unknown',
-                icon: 'question', // ❓
+                icon: ['question'], // ❓
                 title: `未知消息类型: ${i.contentCategory}`,
                 message: JSON.stringify(i),
                 time: i.createdAt
