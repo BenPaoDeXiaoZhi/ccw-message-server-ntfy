@@ -62,21 +62,23 @@ const actionGroups = {
         message:'你发布的 {subjectOutline} 由于违反社区指南被下架',
     }
 };
-function getNotifyFromRaw(notifyRaw=[]) {
+function getNotifyFromRaw(notifyRaw=[],since=0) {
     let notifyList = []
     for(let i of notifyRaw){
+        if(i.createdAt < since) {
+            continue; // 如果消息时间早于since，则跳过
+        }
         const detail = actionGroups[i.contentCategory]
         if(detail === undefined) {
             console.warn(`未知的消息类型: ${i.contentCategory}`,i)
             notifyList.push({
-                priority: 0,
+                priority: 1,
                 type: 'unknown',
                 icon: 'question', // ❓
                 title: `未知消息类型: ${i.contentCategory}`,
                 message: JSON.stringify(i),
                 time: i.createdAt
             })
-
             continue
         }
         const notify = {
@@ -100,7 +102,7 @@ function getNotifyFromRaw(notifyRaw=[]) {
     console.log(notifyList)
     return notifyList
 }
-async function getNotifyFromPage(pageNum = 1,perPage = 60,group = notifyGroups.system,token='') {
+async function getNotifyFromPage(pageNum = 1,perPage = 60,group = notifyGroups.system,token='',since=0) {
     // console.log(`获取${group}消息,页码:${pageNum},每页:${perPage}`)
     const apiUrl = `https://community-web.ccw.site/notification/page?page=${pageNum}&sortType=DESC&perPage=${perPage}`
 
@@ -117,7 +119,7 @@ async function getNotifyFromPage(pageNum = 1,perPage = 60,group = notifyGroups.s
         console.error('获取失败',notifyDat.code)
         return [{'message':`获取失败,错误码:${notifyDat.code},数据:${notifyDat.msg}`}]
     }
-    return getNotifyFromRaw(notificationsRaw);
+    return notificationsRaw
 }
 /**
  * 获取所有类别的消息
@@ -125,10 +127,30 @@ async function getNotifyFromPage(pageNum = 1,perPage = 60,group = notifyGroups.s
  * @param {number} perPage 每页有几个
  * @param {number} token token
  */
-async function getAllNotify(pageNum = 1,perPage = 60,token='') {
+async function getAllNotify(pageNum = 1,perPage = 60,token='',sinceId='all') {
     let notifyList = []
+    let sinceTime;
+    switch(sinceId) {
+        case 'all':
+            sinceTime = 0;
+            break;
+        case 'none':
+            return []
+        default:
+            sinceTime = sinceId.split('-')[2] //ccw-favorite-1755390482542
+            break
+    }
     for(let i in notifyGroups) {
-        notifyList = notifyList.concat(await getNotifyFromPage(pageNum,perPage,notifyGroups[i],token))
+        let firstNotifies = await getNotifyFromPage(1,1,notifyGroups[i],token,sinceTime)
+        if(firstNotifies.length === 0) {
+            continue;
+        }
+        if(firstNotifies[0].createdAt < sinceTime) {
+            continue; // 如果第一页的消息时间早于since，则跳过
+        }
+        let notifyRaw = await getNotifyFromPage(pageNum,perPage,notifyGroups[i],token,sinceTime)
+        let notify_formatted = getNotifyFromRaw(notifyRaw,sinceTime)
+        notifyList = notifyList.concat(notify_formatted)
     }
     return notifyList;
 }

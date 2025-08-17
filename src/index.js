@@ -74,10 +74,12 @@ export default {
 					if(auth.split(':')[1].length !== 40) {
 						return new Response('身份验证错误,token格式不正确', { status: 401});
 					}
-					return new Response(ccwNotifyToNtfy(await getAllNotify(1,10,auth.split(':')[1])),{status:200})
+					return new Response(ccwNotifyToNtfy(await getAllNotify(1,10,auth.split(':')[1],req.search.since||'all')),{status:200})
 			}
 		}
-		const notifies = await getAllNotify(1,10,'rFyesGUgGqT4crsi63c2807d669fa967f17f5559')
-		return new Response(JSON.stringify(notifies),{status: 200});
+		if(env.TEST_TOKEN){
+			const notifies = await getAllNotify(1,10,env.TEST_TOKEN)
+			return new Response(JSON.stringify(notifies),{status: 200});
+		}
 	},
 };
