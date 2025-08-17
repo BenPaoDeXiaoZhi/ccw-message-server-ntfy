@@ -122,6 +122,11 @@ function getNotifyFromRaw(notifyRaw=[],since=0) {
                     new ntfyMessage.ntfyViewAction('查看详情', `https://www.ccw.site/profile/device`, false)
                 ]
                 break;
+            case 'leave_words':
+                if(i.mesaage){
+                    notify.title = `@${i.senderName}回复了 留言板 中的留言\"${i.message}\"`
+                    notify.message = `@${i.senderName}回复了 留言板 中的留言\"${i.message}\"`
+                }
         }
         notifyList.push(notify)
     }
