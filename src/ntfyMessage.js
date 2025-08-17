@@ -12,14 +12,21 @@ class ntfyAction{
         this.label = label; // 按钮显示的文字
     }
 }
-class ntfyViewAction extends ntfyAction {
+export class ntfyViewAction extends ntfyAction {
     constructor(label='open', url='', clear=true) {
         super('view', label);
         this.url = url; // 点击后跳转的链接
         this.clear = clear; // 是否在点击后清除通知
     }
 }
-class ntfyMessage extends basicMessage {
+export class ntfyHttpAction extends ntfyAction {
+    constructor(label='open', url='', method='post', headers={}, body='', clear=true) {
+        super('http', label);
+        this.url = url; // 点击后跳转的链接
+        this.clear = clear; // 是否在点击后清除通知
+    }
+}
+export class ntfyMessage extends basicMessage {
     /**
      * 
      * @param {string} id 任意字符串,消息的唯一id
@@ -50,4 +57,3 @@ class ntfyMessage extends basicMessage {
         this.expires = time + 60*60*24*7; // 默认过期时间为1周
     }
 }
-export { ntfyMessage};

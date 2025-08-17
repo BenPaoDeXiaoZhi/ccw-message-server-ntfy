@@ -1,10 +1,11 @@
 const axios =  require('axios')
-const notifyGroups = {
+import * as ntfyMessage from './ntfyMessage.js';
+export const notifyGroups = {
     'system': 'WEB_SYSTEM',//系统消息
     'interaction':'CREATION_INTERACTION',//内容互动
     'comment':'COMMENT_TO_ME'//回复我的
 };
-const actionGroups = {
+export const actionGroups = {
     'CREATION_COMMENT_REPLIED': {//回复
         priority: 3,
         type:'reply',
@@ -100,7 +101,13 @@ function getNotifyFromRaw(notifyRaw=[],since=0) {
             .replace('{subjectOutline}', i.subjectOutline)
             .replace('{message}',i.mesaage),
             time: i.createdAt,//毫秒为单位
-            clickUrl:i.clickUrl || '',
+        }
+        switch (notify.type){
+            case 'login':
+                notify.actions = [
+                    new ntfyMessage.ntfyViewAction('查看详情', `https://www.ccw.site/profile/device`, false)
+                ]
+                break;
         }
         notifyList.push(notify)
     }
@@ -123,7 +130,7 @@ async function getNotifyFromPage(pageNum = 1,perPage = 60,group = notifyGroups.s
         return {dat:[{
             contentCategory:'RAW',
             type: 'data error',
-            message:`获取失败,http错误码:${notifyDat.status}错误码:${notifyDat.code},数据:${notifyDat.msg}`,
+            message:`获取失败,http错误码:${notifyDat.status},错误码:${notifyDat.code},数据:${notifyDat.msg}`,
             title:'获取失败',
             icon:['warning'],
             priority:5,
@@ -138,8 +145,9 @@ async function getNotifyFromPage(pageNum = 1,perPage = 60,group = notifyGroups.s
  * @param {number} pageNum 第几页
  * @param {number} perPage 每页有几个
  * @param {number} token token
+ * @param {string} sinceId sinceId,如果是all则获取所有消息,如果是none则不获取任何消息,如果是其他则获取大于该id的消息
  */
-async function getAllNotify(pageNum = 1,perPage = 60,token='',sinceId='all') {
+export async function getAllNotify(pageNum = 1,perPage = 60,token='',sinceId='all') {
     let notifyList = []
     let sinceTime;
     switch(sinceId) {
@@ -170,4 +178,3 @@ async function getAllNotify(pageNum = 1,perPage = 60,token='',sinceId='all') {
     }
     return notifyList;
 }
-export {getNotifyFromPage, getAllNotify, notifyGroups, actionGroups};

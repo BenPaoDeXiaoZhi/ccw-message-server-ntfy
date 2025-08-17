@@ -12,12 +12,12 @@ const topics = [
 	'ccw-message',
 	//'test'
 ]
-import {ntfyMessage} from './ntfyMessage.js';
-import {getAllNotify, getNotifyFromPage, notifyGroups} from './ccwApi.js';
+import * as ntfyMessage from './ntfyMessage.js';
+import * as ccwApi from './ccwApi.js';
 function ccwNotifyToNtfy(notify){
 	let ntfyMessages = []
 	for (let i of notify){
-		const ntfyMessageObj = new ntfyMessage(
+		const ntfyMessageObj = new ntfyMessage.ntfyMessage(
 			`ccw-${i.type}-${i.time}`, // id
 			Math.floor(i.time/1000), // time
 			0, // expires, set later
@@ -74,7 +74,7 @@ export default {
 					if(auth.split(':')[1].length !== 40) {
 						return new Response('身份验证错误,token格式不正确', { status: 401});
 					}
-					return new Response(ccwNotifyToNtfy(await getAllNotify(1,10,auth.split(':')[1],url.searchParams.get('since')||'all')),{status:200})
+					return new Response(ccwNotifyToNtfy(await ccwApi.getAllNotify(1,10,auth.split(':')[1],url.searchParams.get('since')||'all')),{status:200})
 				case 'test':
 					if(env.TEST_TOKEN){
 						console.log('使用测试token',env.TEST_TOKEN)
