@@ -58,7 +58,7 @@
                             container.remove()
                             const tokenContainer = document.getElementById('tokenContainer');
                             tokenContainer.innerHTML = `<h2>您的Token是: 
-                                <span style="color: green;filter:blur(5px);">${response.body.token}</span>
+                                <input style="color: green;filter:blur(5px);" value=${response.body.token} onfocus="this.select()"></input><br>
                                 ,请将token复制到ntfy中作为密码(不要告诉别人,否则可能被盗号)</h2>`
                         }
                     }
