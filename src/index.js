@@ -62,16 +62,17 @@ export default {
 					return new Response('{\"success\":\"true\"}',{status:200});
 				case 'json':
 					if(!req.headers.get('Authorization')) {
-						return new Response('没有Authorization头部,请使用basic auth进行身份验证', { status: 401});
+						return new Response('没有Authorization头部,请使用basic auth进行身份验证', { status: 404});
 					}
 					if(!req.headers.get('Authorization').startsWith('Basic ')) {
-						return new Response('Authorization类型不是basic,请使用basic auth进行身份验证', { status: 401});
+						return new Response('Authorization类型不是basic,请使用basic auth进行身份验证', { status: 403});
 					}
 					const auth = atob(req.headers.get('Authorization').split('Basic ')[1])
 					if(auth.split(':').length !== 2) {
-						return new Response('身份验证错误,请将user:password通过base64编码以后发送', { status: 401});
+						return new Response('身份验证错误,请将user:password通过base64编码以后发送', { status: 402});
 					}
 					if(auth.split(':')[1].length !== 40) {
+						console.warn('token格式不正确,请检查token是否正确',auth.split(':')[1])
 						return new Response('身份验证错误,token格式不正确', { status: 401});
 					}
 					return new Response(ccwNotifyToNtfy(await ccwApi.getAllNotify(1,10,auth.split(':')[1],url.searchParams.get('since')||'all')),{status:200})
