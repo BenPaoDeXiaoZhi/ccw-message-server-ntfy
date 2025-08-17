@@ -8,6 +8,7 @@ class basicMessage {
 }
 class ntfyAction{
     constructor(action='view', label='open') {
+        this.id = Date.now() % Math.pow(10,10)
         this.action = action; // 'view', 'broadcast', 'http'
         this.label = label; // 按钮显示的文字
     }
