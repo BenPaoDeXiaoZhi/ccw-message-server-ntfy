@@ -37,6 +37,7 @@ function ccwNotifyToNtfy(notify){
 }
 export default {
 	async fetch(req, env, ctx) {
+		console.log(req,env,ctx)
 		const url = new URL(req.url);
 		console.log(url);
 		if(req.method =='OPTIONS') {
@@ -76,6 +77,7 @@ export default {
 						console.warn('token格式不正确,请检查token是否正确',auth.split(':')[1])
 						return new Response('身份验证错误,token格式不正确', { status: 401});
 					}
+					console.log(ccwNotifyToNtfy(await ccwApi.getAllNotify(1,10,auth.split(':')[1],url.searchParams.get('since')||'all')),{status:200})
 					return new Response(ccwNotifyToNtfy(await ccwApi.getAllNotify(1,10,auth.split(':')[1],url.searchParams.get('since')||'all')),{status:200})
 				case 'test':
 					if(env.TEST_TOKEN){
