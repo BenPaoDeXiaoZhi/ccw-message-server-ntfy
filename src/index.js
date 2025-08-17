@@ -53,10 +53,11 @@ export default {
 			switch (url.pathname.split('/')[2]) {
 				case 'auth':
 					if(!req.headers.get('Authorization')) {
-						return new Response('没有Authorization头部,请使用basic auth进行身份验证', { status: 401});
+						return new Response('没有Authorization头部,请使用basic auth进行身份验证', { status: 406});
 					}
 					if(!req.headers.get('Authorization').startsWith('Basic ')) {
-						return new Response('Authorization类型不是basic,请使用basic auth进行身份验证', { status: 401});
+						console.warn('Authorization类型不是basic,请使用basic auth进行身份验证');
+						return new Response('Authorization类型不是basic,请使用basic auth进行身份验证', { status: 405});
 					}
 					console.log(atob(req.headers.get('Authorization').split('Basic ')[1]))
 					return new Response('{\"success\":\"true\"}',{status:200});
