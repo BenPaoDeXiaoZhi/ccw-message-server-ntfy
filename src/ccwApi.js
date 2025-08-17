@@ -9,43 +9,43 @@ const actionGroups = {
         priority: 3,
         type:'reply',
         icon:['left_speech_bubble'],//🗨️
-        title:'{senderName} 回复了你在{subjectOutline}中的的评论\"{message}\"',
+        title:'@{senderName} 回复了你在《{subjectOutline}》中的的评论\"{message}\"',
         message:'{comment}',
     },
     'CREATION_COMMENTED': {//评论
         priority: 3,
         type:'comment',
         icon:['left_speech_bubble'],//🗨️
-        title:'{senderName} 评论了你的 {subjectOutline}',
+        title:'@{senderName} 评论了你的 《{subjectOutline}》',
         message:'{comment}',
     },
     'CREATION_LIKED': {//点赞
         priority: 3,
         type:'creation_like',
         icon:['+1','memo'],//👍📝
-        title:'{senderName} 点赞了你的作品 {subjectOutline}',
-        message:'{senderName} 点赞了你的作品 {subjectOutline}',
+        title:'@{senderName} 点赞了你的作品 《{subjectOutline}》',
+        message:'@{senderName} 点赞了你的作品 《{subjectOutline}》',
     },
     'EXTENSION_LIKED': {//点赞
         priority: 3,
         type:'extension_like',
         icon:['+1','package'],//👍📦
-        title:'{senderName} 点赞了你的扩展 {subjectOutline}',
-        message:'{senderName} 点赞了你的扩展 {subjectOutline}',
+        title:'@{senderName} 点赞了你的扩展 《{subjectOutline}》',
+        message:'@{senderName} 点赞了你的扩展 《{subjectOutline}》',
     },
     'CREATION_FAVORITE': {//收藏
         priority: 3,
         type:'favorite',
         icon:['star'],//⭐
-        title:'你的 {subjectOutline} 被 {senderName} 加入了收藏',
-        message:'你的 {subjectOutline} 被 {senderName} 加入了收藏',
+        title:'你的 《{subjectOutline}》 被 @{senderName} 加入了收藏',
+        message:'你的 《{subjectOutline}》 被 @{senderName} 加入了收藏',
     },
     'FOLLOWED': {//关注
         priority: 4,
         type:'follow',
         icon:['heart'],//❤️
-        title:'{senderName} 关注了你',
-        message:'{senderName} 关注了你',
+        title:'@{senderName} 关注了你',
+        message:'@{senderName} 关注了你',
     },
     'SESSION_CREATED': {//登录
         priority: 5,
@@ -58,8 +58,8 @@ const actionGroups = {
         priority: 5,
         type:'banned',
         icon:['no_entry'],//🚫
-        title:'你的 {subjectOutline} 被下架',
-        message:'你发布的 {subjectOutline} 由于违反社区指南被下架',
+        title:'你的 《{subjectOutline}》 被下架',
+        message:'你发布的 《{subjectOutline}》 由于违反社区指南被下架',
     }
 };
 function getNotifyFromRaw(notifyRaw=[],since=0) {
@@ -69,6 +69,10 @@ function getNotifyFromRaw(notifyRaw=[],since=0) {
             continue; // 如果消息时间早于since，则跳过
         }
         const detail = actionGroups[i.contentCategory]
+        if(i.contentCategory === 'RAW'){
+            notifyList.push(i)
+            continue
+        }
         if(detail === undefined) {
             console.warn(`未知的消息类型: ${i.contentCategory}`,i)
             notifyList.push({
@@ -95,17 +99,16 @@ function getNotifyFromRaw(notifyRaw=[],since=0) {
             .replace('{senderName}', i.senderName)
             .replace('{subjectOutline}', i.subjectOutline)
             .replace('{message}',i.mesaage),
-            time: i.createdAt
+            time: i.createdAt//毫秒为单位
         }
         notifyList.push(notify)
     }
-    console.log(notifyList)
+    // console.log(notifyList)
     return notifyList
 }
 async function getNotifyFromPage(pageNum = 1,perPage = 60,group = notifyGroups.system,token='',since=0) {
     // console.log(`获取${group}消息,页码:${pageNum},每页:${perPage}`)
     const apiUrl = `https://community-web.ccw.site/notification/page?page=${pageNum}&sortType=DESC&perPage=${perPage}`
-
     const fet = await axios.post(apiUrl,`{"notifyGroup":"${group}"}`,{headers:{
         'Content-Type':'application/json;charset=UTF-8',
         "Cookie":`token=${token}`,
@@ -116,10 +119,17 @@ async function getNotifyFromPage(pageNum = 1,perPage = 60,group = notifyGroups.s
     if(notifyDat.code === '200'){
         notificationsRaw = notifyDat.body.data
     }else{
-        console.error('获取失败',notifyDat.code)
-        return [{'message':`获取失败,错误码:${notifyDat.code},数据:${notifyDat.msg}`}]
+        return {dat:[{
+            contentCategory:'RAW',
+            type: 'data error',
+            message:`获取失败,错误码:${notifyDat.code},数据:${notifyDat.msg}`,
+            title:'获取失败',
+            icon:['warning'],
+            priority:5,
+            time:Date.now()
+        }],status:'error'}
     }
-    return notificationsRaw
+    return {dat:notificationsRaw,status:'ok'}
 }
 /**
  * 获取所有类别的消息
@@ -137,19 +147,23 @@ async function getAllNotify(pageNum = 1,perPage = 60,token='',sinceId='all') {
         case 'none':
             return []
         default:
-            sinceTime = sinceId.split('-')[2] //ccw-favorite-1755390482542
+            sinceTime = sinceId.split('-')[2] || 0 //ccw-favorite-1755390482542
             break
     }
     for(let i in notifyGroups) {
         let firstNotifies = await getNotifyFromPage(1,1,notifyGroups[i],token,sinceTime)
-        if(firstNotifies.length === 0) {
+        if(firstNotifies.status === 'error') {
+            notifyList = notifyList.concat(firstNotifies.dat)
+            break; // 如果获取失败，则停止继续获取
+        }
+        if(firstNotifies.dat.length === 0) {
             continue;
         }
-        if(firstNotifies[0].createdAt < sinceTime) {
+        if(firstNotifies.dat[0].createdAt < sinceTime) {
             continue; // 如果第一页的消息时间早于since，则跳过
         }
         let notifyRaw = await getNotifyFromPage(pageNum,perPage,notifyGroups[i],token,sinceTime)
-        let notify_formatted = getNotifyFromRaw(notifyRaw,sinceTime)
+        let notify_formatted = getNotifyFromRaw(notifyRaw.dat,sinceTime)
         notifyList = notifyList.concat(notify_formatted)
     }
     return notifyList;

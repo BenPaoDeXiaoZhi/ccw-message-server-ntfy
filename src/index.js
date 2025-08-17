@@ -74,12 +74,20 @@ export default {
 					if(auth.split(':')[1].length !== 40) {
 						return new Response('身份验证错误,token格式不正确', { status: 401});
 					}
-					return new Response(ccwNotifyToNtfy(await getAllNotify(1,10,auth.split(':')[1],req.search.since||'all')),{status:200})
+					return new Response(ccwNotifyToNtfy(await getAllNotify(1,10,auth.split(':')[1],url.searchParams.get('since')||'all')),{status:200})
+				case 'test':
+					if(env.TEST_TOKEN){
+						console.log('使用测试token',env.TEST_TOKEN)
+						let notifies = await getAllNotify(1,10,env.TEST_TOKEN,url.searchParams.get('since')||'all')
+						notifies = notifies.sort((a,b)=>b.time - a.time)
+						// console.log(notifies);
+						return new Response(ccwNotifyToNtfy(notifies),{status: 200});
+					}
+					else{
+						return new Response('没有配置测试token', { status: 500 });
+					}
 			}
 		}
-		if(env.TEST_TOKEN){
-			const notifies = await getAllNotify(1,10,env.TEST_TOKEN)
-			return new Response(JSON.stringify(notifies),{status: 200});
-		}
+		return new Response('不正确的请求url',{status: 404});
 	},
 };
