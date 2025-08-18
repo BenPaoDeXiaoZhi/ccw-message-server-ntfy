@@ -123,7 +123,7 @@ function getNotifyFromRaw(notifyRaw=[],since=0) {
                 ]
                 break;
             case 'leave_words':
-                if(i.mesaage){
+                if(i.message){
                     notify.title = `@${i.senderName}回复了 留言板 中的留言\"${i.message}\"`
                     notify.message = `@${i.senderName}回复了 留言板 中的留言\"${i.message}\"`
                 }
