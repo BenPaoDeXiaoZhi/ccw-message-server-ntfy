@@ -27,6 +27,13 @@ export const actionGroups = {
         title:'@{senderName} 改编并发布了新作品 《{subjectOutline}》',
         message:'@{senderName} 改编并发布了新作品 《{subjectOutline}》',
     },
+    "CREATION_CHECKED":{
+        priority:4,
+        type:"creation_checked",
+        icon:['memo','green_circle'],//📝🟢
+        title:"你的作品《{subjectOutline}》已通过审核",
+        message:"你的作品《{subjectOutline}》已通过审核"
+    },
     "PROFILE_LEAVE_WORDS":{
         priority: 4,
         type:'leave_words',
