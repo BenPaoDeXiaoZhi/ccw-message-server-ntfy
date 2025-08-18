@@ -127,6 +127,7 @@ function getNotifyFromRaw(notifyRaw=[],since=0) {
                     notify.title = `@${i.senderName}回复了 留言板 中的留言\"${i.message}\"`
                     notify.message = `@${i.senderName}回复了 留言板 中的留言\"${i.message}\"`
                 }
+                break;
         }
         notifyList.push(notify)
     }
