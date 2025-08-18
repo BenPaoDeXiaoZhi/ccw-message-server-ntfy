@@ -21,10 +21,16 @@ export class ntfyViewAction extends ntfyAction {
     }
 }
 export class ntfyHttpAction extends ntfyAction {
-    constructor(label='open', url='', method='post', headers={}, body='', clear=true) {
+    constructor(label='send', url='', method='post', headers={}, body='', clear=true) {
         super('http', label);
         this.url = url; // 点击后跳转的链接
         this.clear = clear; // 是否在点击后清除通知
+        this.headers=headers
+        this.body=body
+        this.method=method
+    }
+    setHeader(key="key",value="value"){
+        this.headers[key]=value
     }
 }
 export class ntfyMessage extends basicMessage {
