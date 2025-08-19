@@ -1,3 +1,11 @@
 export function toTitle(s){
     return s.charAt(0).toUpperCase() + s.slice(1)
 }
+export function toCamel(s,a){
+    const c=s.split(a)
+    const r=c[0]
+    for(let word of c.slice(1)){
+        r+=toTitle(word)
+    }
+    return r
+}
