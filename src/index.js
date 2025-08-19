@@ -40,7 +40,7 @@ export default {
 	async fetch(req, env, ctx) {
 		try{
 		const url = new URL(req.url);
-		log.log(env.logTopic||'ccw-log',req.url,{'req keys':Object.keys(req)})
+	 await log.log(env.logTopic||'ccw-log',req.url,{'req keys':Object.keys(req)})
 		if(req.method =='OPTIONS') {
 			return new Response('', { status: 200 ,headers:{
 				'Access-Control-Allow-Headers': '*',
@@ -82,7 +82,7 @@ export default {
 					return new Response(ccwNotifyToNtfy(await ccwApi.getAllNotify(1,10,auth.split(':')[1],url.searchParams.get('since')||'all')),{status:200})
 				case 'test':
 					if(env.TEST_TOKEN){
-						log.log(env.logTopic||'ccw-log',req.url,'使用测试token',env.TEST_TOKEN)
+						await log.log(env.logTopic||'ccw-log',req.url,'使用测试token',env.TEST_TOKEN)
 						let notifies = await getAllNotify(1,10,env.TEST_TOKEN,url.searchParams.get('since')||'all')
 						notifies = notifies.sort((a,b)=>b.time - a.time)
 						// console.log(notifies);
@@ -93,10 +93,10 @@ export default {
 					}
 			}
 		}
-		log.log(env.logTopic||'ccw-log',req.url,'不支持的方法',url.pathname.split('/')[2])
+		await log.log(env.logTopic||'ccw-log',req.url,'不支持的方法',url.pathname.split('/')[2])
 		return new Response('不正确的请求url',{status: 404});
 		}catch(e){
-			 log.err(env.errTopic||'ccw-err',e)
+			 await log.err(env.errTopic||'ccw-err',e)
 		}
 	},
 };
