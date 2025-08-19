@@ -38,7 +38,7 @@ function ccwNotifyToNtfy(notify){
 export default {
 	async fetch(req, env, ctx) {
 		const url = new URL(req.url);
-		console.log(JSON.stringify(req.search))
+		console.log(JSON.stringify(req))
 		if(req.method =='OPTIONS') {
 			return new Response('', { status: 200 ,headers:{
 				'Access-Control-Allow-Headers': '*',
