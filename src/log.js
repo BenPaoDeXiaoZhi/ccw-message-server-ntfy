@@ -1,5 +1,5 @@
 import * as ntfyMessage from "./ntfyMessage.js"
-export function log(topicName,url,...args){
+export async function log(topicName,url,...args){
     console.log(...args)
     let dat='log while responding '+url+"\n"
     for (let logObj of args){
@@ -8,10 +8,13 @@ export function log(topicName,url,...args){
     const ntfyMsg=new ntfyMessage.ntfyMessage(Date.now(),0,0,topicName,dat,"log from cf",["memo"])
     ntfyMsg.setTime(Math.floor(Date.now()/1000))
     console.log('pushing data',JSON.stringify(ntfyMsg))
-    fetch('https://ntfy.sh/', {
+    const fet = await fetch('https://ntfy.sh/', {
         method: 'POST', // PUT works too
         body: JSON.stringify(ntfyMsg)
     })
+    if(!fet.ok){
+        console.error("请求不成功",fet.status,await fet.body())
+    }
 }
 export function err(topicName,url,...args){
     console.error(...args)
