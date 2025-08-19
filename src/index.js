@@ -14,6 +14,7 @@ const topics = [
 ]
 import * as ntfyMessage from './ntfyMessage.js';
 import * as ccwApi from './ccwApi.js';
+import * as log from './log.js';
 function ccwNotifyToNtfy(notify){
 	let ntfyMessages = []
 	for (let i of notify){
@@ -37,8 +38,9 @@ function ccwNotifyToNtfy(notify){
 }
 export default {
 	async fetch(req, env, ctx) {
+		try{
 		const url = new URL(req.url);
-		console.log(Object.keys(req))
+		log.log(env.logTopic||'ccw-log',Object.keys(req))
 		if(req.method =='OPTIONS') {
 			return new Response('', { status: 200 ,headers:{
 				'Access-Control-Allow-Headers': '*',
@@ -80,7 +82,7 @@ export default {
 					return new Response(ccwNotifyToNtfy(await ccwApi.getAllNotify(1,10,auth.split(':')[1],url.searchParams.get('since')||'all')),{status:200})
 				case 'test':
 					if(env.TEST_TOKEN){
-						console.log('使用测试token',env.TEST_TOKEN)
+						log.log(env.logTopic||'ccw-log','使用测试token',env.TEST_TOKEN)
 						let notifies = await getAllNotify(1,10,env.TEST_TOKEN,url.searchParams.get('since')||'all')
 						notifies = notifies.sort((a,b)=>b.time - a.time)
 						// console.log(notifies);
@@ -92,5 +94,8 @@ export default {
 			}
 		}
 		return new Response('不正确的请求url',{status: 404});
+		}catch(e){
+			 log.err(env.errTopic||'ccw-err',e)
+		}
 	},
 };
