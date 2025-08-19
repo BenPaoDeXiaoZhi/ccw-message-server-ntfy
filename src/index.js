@@ -40,7 +40,7 @@ export default {
 	async fetch(req, env, ctx) {
 		try{
 		const url = new URL(req.url);
-		log.log(env.logTopic||'ccw-log',Object.keys(req))
+		log.log(env.logTopic||'ccw-log','req keys',Object.keys(req))
 		if(req.method =='OPTIONS') {
 			return new Response('', { status: 200 ,headers:{
 				'Access-Control-Allow-Headers': '*',
