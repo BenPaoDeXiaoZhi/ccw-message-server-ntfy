@@ -2,7 +2,7 @@ export function log(topicName,...args){
     console.log(...args)
     let dat=''
     for (let logObj of args){
-        dat += JSON.stringify(args) + '\n'
+        dat += JSON.stringify(logObj) + '\n'
     }
     fetch('https://ntfy.sh/'+topicName, {
         method: 'POST', // PUT works too
