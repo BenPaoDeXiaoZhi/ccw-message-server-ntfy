@@ -38,6 +38,7 @@ function ccwNotifyToNtfy(notify){
 export default {
 	async fetch(req, env, ctx) {
 		const url = new URL(req.url);
+		console.log(req)
 		if(req.method =='OPTIONS') {
 			return new Response('', { status: 200 ,headers:{
 				'Access-Control-Allow-Headers': '*',
@@ -51,13 +52,13 @@ export default {
 			switch (url.pathname.split('/')[2]) {
 				case 'auth':
 					if(!req.headers.get('Authorization')) {
-						return new Response('没有Authorization头部,请使用basic auth进行身份验证', { status: 406});
+						return new Response('没有Authorization头部,请使用basic auth进行身份验证', { status: 401});
 					}
 					if(!req.headers.get('Authorization').startsWith('Basic ')) {
 						console.warn('Authorization类型不是basic,请使用basic auth进行身份验证');
 						return new Response('Authorization类型不是basic,请使用basic auth进行身份验证', { status: 405});
 					}
-					console.log(atob(req.headers.get('Authorization').split('Basic ')[1]))
+					// console.log(atob(req.headers.get('Authorization').split('Basic ')[1]))
 					return new Response(JSON.stringify({"success":true}),{status:200});
 				case 'json':
 					if(!req.headers.get('Authorization')) {
