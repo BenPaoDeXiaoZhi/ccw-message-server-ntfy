@@ -1,6 +1,6 @@
 export function log(topicName,url,...args){
     console.log(...args)
-    let dat=''
+    let dat='log while responding '+url
     for (let logObj of args){
         dat += JSON.stringify(logObj) + ' '
     }
@@ -11,7 +11,7 @@ export function log(topicName,url,...args){
 }
 export function err(topicName,url,...args){
     console.error(...args)
-    let dat=''
+    let dat='error while responding '+url
     for (let logObj of args){
         dat += JSON.stringify(args) + '\n'
     }
