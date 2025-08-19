@@ -7,6 +7,7 @@ export function log(topicName,url,...args){
     }
     const ntfyMsg=new ntfyMessage.ntfyMessage(Date.now(),0,0,topicName,dat,"log from cf",["memo"])
     ntfyMsg.setTime(Math.floor(Date.now()/1000))
+    console.log('pushing data',JSON.stringify(ntfyMsg))
     fetch('https://ntfy.sh/', {
         method: 'POST', // PUT works too
         body: JSON.stringify(ntfyMsg)
