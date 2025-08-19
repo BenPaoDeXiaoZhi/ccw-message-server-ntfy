@@ -91,7 +91,7 @@ export default {
 					else{
 						return new Response('没有配置测试token', { status: 500 });
 					}
-					default:
+				default:
 				  log.log(env.logTopic||'ccw-log',req.url,'不支持的方法',url.pathname.split('/')[2])
 			}
 		}
