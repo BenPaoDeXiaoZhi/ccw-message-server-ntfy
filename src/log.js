@@ -1,12 +1,15 @@
+import * as ntfyMessage from "./ntfyMessage.js"
 export function log(topicName,url,...args){
     console.log(...args)
-    let dat='log while responding '+url
+    let dat='log while responding '+url+"\n"
     for (let logObj of args){
         dat += JSON.stringify(logObj) + ' '
     }
+    const ntfyMsg=new ntfyMessage.ntfyMessage(Date.now(),0,0,topicName,dat,"log from cf",["memo"])
+    ntfyMsg.setTime(Math.floor(Date.now()/1000))
     fetch('https://ntfy.sh/'+topicName, {
         method: 'POST', // PUT works too
-        body: dat
+        body: JSON.stringify(ntfyMsg)
     })
 }
 export function err(topicName,url,...args){
