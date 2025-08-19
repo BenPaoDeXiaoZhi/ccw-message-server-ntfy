@@ -3,7 +3,7 @@ export function toTitle(s){
 }
 export function toCamel(s,a){
     const c=s.split(a)
-    const r=c[0]
+    let r=c[0]
     for(let word of c.slice(1)){
         r+=toTitle(word)
     }
