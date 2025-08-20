@@ -111,7 +111,7 @@ function getNotifyFromRaw(notifyRaw=[],since=0) {
             continue
         }
         if(detail === undefined) {
-            log.warn(`未知的消息类型: ${i.contentCategory}`,JSON.stringify(i))
+            log.warn('ccw-log',`未知的消息类型: ${i.contentCategory}`,JSON.stringify(i))
             notifyList.push({
                 priority: 3,
                 type: 'unknown',
