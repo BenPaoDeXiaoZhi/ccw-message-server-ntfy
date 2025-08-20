@@ -20,6 +20,13 @@ export const actionGroups = {
         title:'@{senderName} 评论了你的 《{subjectOutline}》',
         message:'{comment}',
     },
+    "EXTENSION_COMMENTED": {
+        priority: 3,
+        type:'comment',
+        icon:['left_speech_bubble','package'],//🗨️
+        title:'@{senderName} 评论了你的扩展 《{subjectOutline}》',
+        message:'{comment}',
+    },
     "CREATION_REMIXED": {//改编并发布了作品
         priority: 4,
         type:'creation_remixed',
