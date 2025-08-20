@@ -1,5 +1,6 @@
 const axios =  require('axios')
 import * as ntfyMessage from './ntfyMessage.js';
+import * as log from './log.js'
 export const notifyGroups = {
     'system': 'WEB_SYSTEM',//系统消息
     'interaction':'CREATION_INTERACTION',//内容互动
@@ -103,7 +104,7 @@ function getNotifyFromRaw(notifyRaw=[],since=0) {
             continue
         }
         if(detail === undefined) {
-            console.warn(`未知的消息类型: ${i.contentCategory}`,JSON.stringify(i))
+            log.warn(`未知的消息类型: ${i.contentCategory}`,JSON.stringify(i))
             notifyList.push({
                 priority: 3,
                 type: 'unknown',
