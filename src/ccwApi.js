@@ -32,6 +32,13 @@ export const actionGroups = {
         priority: 3,
         type:'comment',
         icon:['left_speech_bubble','package'],//🗨️
+        title:'@{senderName} 回复了你在扩展《{subjectOutline}》下的评论\"{message}\"',
+        message:'{comment}',
+    },
+    "EXTENSION_COMMENT_REPLIED":{
+        priority: 3,
+        type:'comment_replied',
+        icon:['left_speech_bubble','package'],//🗨️
         title:'@{senderName} 评论了你的扩展 《{subjectOutline}》',
         message:'{comment}',
     },
