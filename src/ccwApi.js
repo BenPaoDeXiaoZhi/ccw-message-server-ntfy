@@ -32,14 +32,14 @@ export const actionGroups = {
         priority: 3,
         type:'comment',
         icon:['left_speech_bubble','package'],//🗨️
-        title:'@{senderName} 回复了你在扩展《{subjectOutline}》下的评论\"{message}\"',
+        title:'@{senderName} 评论了你的扩展 《{subjectOutline}》',
         message:'{comment}',
     },
     "EXTENSION_COMMENT_REPLIED":{
         priority: 3,
         type:'comment_replied',
         icon:['left_speech_bubble','package'],//🗨️
-        title:'@{senderName} 评论了你的扩展 《{subjectOutline}》',
+        title:'@{senderName} 回复了你在扩展《{subjectOutline}》下的评论\"{message}\"',
         message:'{comment}',
     },
     "CREATION_REMIXED": {//改编并发布了作品
