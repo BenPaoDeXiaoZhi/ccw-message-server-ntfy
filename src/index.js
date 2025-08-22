@@ -97,7 +97,8 @@ export default {
 			await log.err(env.logTopic || 'ccw-log', req.url, '不支持的方法', url.pathname.split('/')[2])
 			return new Response('不正确的请求url', { status: 404 });
 		} catch (e) {
-			await log.err(env.errTopic || 'ccw-log', e)
+   console.error(e)
+			//await log.err(env.errTopic || 'ccw-log', e)
 		}
 	},
 };
