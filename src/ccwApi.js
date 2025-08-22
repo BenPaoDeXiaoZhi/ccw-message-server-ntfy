@@ -7,13 +7,14 @@ export const notifyGroups = {
     'comment':'COMMENT_TO_ME'//回复我的
 };
 export const actionGroups = {
-    "COMMUNITY_ACTIVITY": {
+    "POST_VISIBILITY_CHANGED":{
         priority: 3,
         type:'community_activity',
-        icon:['left_speech_bubble'],//🗨️
-        title:'叮咚~您有新的社区消息',
+        icon:['left_speech_bubble', "memo"],//🗨️
+        title:'你的文章已通过审核',
         message:'{comment}',
     },
+    "COMMUNITY_ACTIVITY": 
     'CREATION_COMMENT_REPLIED': {//回复
         priority: 3,
         type:'reply',
