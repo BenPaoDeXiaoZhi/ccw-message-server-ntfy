@@ -12,7 +12,7 @@ export function toCamel(s,a){
 export function getImageFromMarkdown(md){
     const imgStrs = md.match(/!\[(.*)\]\((.+)\)/g) || []
     return imgStrs.map((dat)=>{
-        const imgs = dat.match(/!\[(.*)\]\((.+)\)/) || return undefined
-        return {alt:imgs[1],src:imgs[2]}
+        const imgs = dat.match(/!\[(.*)\]\((.+)\)/)
+        if(imgs)return {alt:imgs[1],src:imgs[2]}
     })
 }
