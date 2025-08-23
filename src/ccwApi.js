@@ -1,6 +1,7 @@
 const axios =  require('axios')
 import * as ntfyMessage from './ntfyMessage.js';
 import * as log from './log.js'
+import * as util from "./utils.js"
 export const notifyGroups = {
     'system': 'WEB_SYSTEM',//系统消息
     'interaction':'CREATION_INTERACTION',//内容互动
@@ -164,6 +165,9 @@ function getNotifyFromRaw(notifyRaw=[],since=0) {
                     notify.message = `@${i.senderName}回复了 留言板 中的留言\"${i.message}\":  \"${i.comment}\"`
                 }
                 break;
+        }
+        if(notify.message){
+            log.log("ccw-log",util.getImageFromMarkdown(notify.message))
         }
         notifyList.push(notify)
     }
