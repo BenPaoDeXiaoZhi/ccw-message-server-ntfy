@@ -167,7 +167,7 @@ function getNotifyFromRaw(notifyRaw=[],since=0) {
                 break;
         }
         if(notify.message){
-            log.log("ccw-log",util.getImageFromMarkdown(notify.message))
+            log.log("ccw-log","images",util.getImageFromMarkdown(notify.message))
         }
         notifyList.push(notify)
     }
