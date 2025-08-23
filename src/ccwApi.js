@@ -176,7 +176,7 @@ async function getNotifyFromPage(pageNum = 1,perPage = 60,group = notifyGroups.s
     const fet = await axios.post(apiUrl,`{"notifyGroup":"${group}"}`,{headers:{
         'Content-Type':'application/json;charset=UTF-8',
         "Cookie":`token=${token}`,
-        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3"
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3 CloudflareWorkerByBPDXZ/0.0.0"
     }})
     const notifyDat = fet.data
     let notificationsRaw = []
