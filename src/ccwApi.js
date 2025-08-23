@@ -10,11 +10,17 @@ export const actionGroups = {
     "POST_VISIBILITY_CHANGED":{
         priority: 3,
         type:'community_activity',
-        icon:['left_speech_bubble', "memo"],//🗨️
+        icon:['left_speech_bubble', "memo"],//🗨️📝
         title:'你的文章已通过审核',
         message:'{comment}',
     },
-    "COMMUNITY_ACTIVITY": 
+    "COMMUNITY_ACTIVITY": {
+        priority: 3,
+        type:'community_activity',
+        icon:['left_speech_bubble', "memo"],//🗨️📝
+        title:'叮咚，您有新的社区消息~',
+        message:'{comment}',
+    },
     'CREATION_COMMENT_REPLIED': {//回复
         priority: 3,
         type:'reply',
@@ -32,14 +38,14 @@ export const actionGroups = {
     "EXTENSION_COMMENTED": {
         priority: 3,
         type:'comment',
-        icon:['left_speech_bubble','package'],//🗨️
+        icon:['left_speech_bubble','package'],//🗨️📦
         title:'@{senderName} 评论了你的扩展 《{subjectOutline}》',
         message:'{comment}',
     },
     "EXTENSION_COMMENT_REPLIED":{
         priority: 3,
         type:'comment_replied',
-        icon:['left_speech_bubble','package'],//🗨️
+        icon:['left_speech_bubble','package'],//🗨️📦
         title:'@{senderName} 回复了你在扩展《{subjectOutline}》下的评论\"{message}\"',
         message:'{comment}',
     },
