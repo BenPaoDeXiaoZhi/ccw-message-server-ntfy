@@ -114,7 +114,7 @@ export const actionGroups = {
         message:'你发布的 《{subjectOutline}》 由于违反社区指南被下架',
     }
 };
-function getNotifyFromRaw(notifyRaw=[],since=0) {
+function getNotifyFromRaw(notifyRaw=[],since=0,topic="ccw-log") {
     let notifyList = []
     for(let i of notifyRaw){
         if(i.createdAt < since) {
@@ -126,7 +126,7 @@ function getNotifyFromRaw(notifyRaw=[],since=0) {
             continue
         }
         if(detail === undefined) {
-            log.warn('ccw-log',`未知的消息类型: ${i.contentCategory}`,JSON.stringify(i))
+            log.warn(topic,`未知的消息类型: ${i.contentCategory}`,JSON.stringify(i))
             notifyList.push({
                 priority: 3,
                 type: 'unknown',
@@ -168,7 +168,6 @@ function getNotifyFromRaw(notifyRaw=[],since=0) {
         }
         if(notify.message){
             const imgs = util.getImageFromMarkdown(notify.message)
-            log.log("ccw-log","images",imgs)
             if(imgs[0]) notify.attatchment={url:imgs[0].src,name:imgs[0].alt}
         }
         notifyList.push(notify)
@@ -209,7 +208,7 @@ async function getNotifyFromPage(pageNum = 1,perPage = 60,group = notifyGroups.s
  * @param {number} token token
  * @param {string} sinceId sinceId,如果是all则获取所有消息,如果是none则不获取任何消息,如果是其他则获取大于该id的消息
  */
-export async function getAllNotify(pageNum = 1,perPage = 60,token='',sinceId='all') {
+export async function getAllNotify(pageNum = 1,perPage = 60,token='',sinceId='all',topic="ccw-log") {
     let notifyList = []
     let sinceTime;
     switch(sinceId) {
@@ -235,7 +234,7 @@ export async function getAllNotify(pageNum = 1,perPage = 60,token='',sinceId='al
             continue; // 如果第一页的消息时间早于since，则跳过
         }
         let notifyRaw = await getNotifyFromPage(pageNum,perPage,notifyGroups[i],token,sinceTime)
-        let notify_formatted = getNotifyFromRaw(notifyRaw.dat,sinceTime)
+        let notify_formatted = getNotifyFromRaw(notifyRaw.dat,sinceTime,topic)
         notifyList = notifyList.concat(notify_formatted)
     }
     return notifyList;
