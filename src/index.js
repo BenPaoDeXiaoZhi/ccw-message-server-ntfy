@@ -84,7 +84,7 @@ export default {
 					case 'test':
 						if (env.TEST_TOKEN) {
 							await log.log(env.logTopic || 'ccw-log', req.url, '使用测试token', env.TEST_TOKEN)
-							let notifies = await getAllNotify(1, 10, env.TEST_TOKEN, url.searchParams.get('since') || 'all')
+							let notifies = await getAllNotify(1, 10, env.TEST_TOKEN, url.searchParams.get('since') || 'all',env.logTopic||"ccw-log")
 							notifies = notifies.sort((a, b) => b.time - a.time)
 							// console.log(notifies);
 							return new Response(ccwNotifyToNtfy(notifies), { status: 200 });
