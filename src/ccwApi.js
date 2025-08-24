@@ -169,7 +169,7 @@ function getNotifyFromRaw(notifyRaw=[],since=0) {
         if(notify.message){
             const imgs = util.getImageFromMarkdown(notify.message)
             log.log("ccw-log","images",imgs)
-            notify.attatchment={url:imgs[0].src,name:imgs[0].alt}
+            if(imgs[0]) notify.attatchment={url:imgs[0].src,name:imgs[0].alt}
         }
         notifyList.push(notify)
     }
