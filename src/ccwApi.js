@@ -8,9 +8,16 @@ export const notifyGroups = {
     'comment':'COMMENT_TO_ME'//回复我的
 };
 export const actionGroups = {
+    "POST_COMMENT":{
+        priority: 3,
+        type:'post_comment',
+        icon:['left_speech_bubble', "memo"],//🗨️📝
+        title:'@{senderName} 回复了你在 《{subjectOutline}》的评论：@{message}',
+        message:'{comment}',
+    },
     "POST_VISIBILITY_CHANGED":{
         priority: 3,
-        type:'community_activity',
+        type:'post_vis_change',
         icon:['left_speech_bubble', "memo"],//🗨️📝
         title:'你的文章已通过审核',
         message:'{comment}',
