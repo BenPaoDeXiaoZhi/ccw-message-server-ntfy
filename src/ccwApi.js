@@ -12,7 +12,7 @@ export const actionGroups = {
         priority: 3,
         type:'post_comment',
         icon:['left_speech_bubble', "memo"],//🗨️📝
-        title:'@{senderName} 回复了你在 《{subjectOutline}》的评论：@{message}',
+        title:'@{senderName} 回复了你在 《{subjectOutline}》的评论：{message}',
         message:'{comment}',
     },
     "POST_VISIBILITY_CHANGED":{
